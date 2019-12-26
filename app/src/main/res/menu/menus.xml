@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:apk="http://schemas.android.com/apk/res-auto"
+    >
+    <item android:id="@+id/share"
+        android:icon="@drawable/baseline_share_white_18dp"
+        android:title="share"
+        apk:showAsAction="ifRoom">
+
+    </item>
+    <item android:id="@+id/sowdate"
+        android:title="Change sow date"
+        apk:showAsAction="never"/>
+    <item android:id="@+id/logout"
+        android:title="logout"
+        apk:showAsAction="never"/>
+    <item android:title="delete account"
+        android:id="@+id/delete"
+        apk:showAsAction="never"/>
+
+</menu>
