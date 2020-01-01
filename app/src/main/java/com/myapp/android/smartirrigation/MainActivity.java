@@ -5,8 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import android.app.DatePickerDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,12 +20,16 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -31,6 +39,10 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     private String currdate,sowdate,username,mobileno;
     private TextView person,days;
     private Button field,pond;
+    private Farmer f;
+    private static final String CHANNEL_NAME="Smart Irrigation";
+    private static final String CHANNEL_ID="Smart Irrigation";
+    private static final String CHANNEL_DESC="Smart Irrigation notification";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +70,40 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 startActivity(intent);
             }
         });
+
+
+        /*Using FCM for activating notification*/
+        /*if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O)
+        {
+            NotificationChannel channel=new NotificationChannel(CHANNEL_ID,CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription(CHANNEL_DESC);
+            NotificationManager manager=getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+            @Override
+            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                String token;
+             if (task.isSuccessful())
+             {
+                 token=task.getResult().getToken();
+                 databaseReference=FirebaseDatabase.getInstance().getReference("Farmers").child(FirebaseAuth.getInstance().getUid());
+                 f=new Farmer(FirebaseAuth.getInstance().getUid(),username,sowdate,mobileno,token);
+                 databaseReference.setValue(f);
+                 Log.d("success","FCM successful");
+             }
+             else {
+                 token = task.getException().getMessage();
+                 Log.d("failed","FCM Failed");
+             }
+            }
+        });*/
+
+
+
+
     }
 
     @Override
@@ -69,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                Farmer f=new Farmer();
+                //Farmer f=new Farmer();
 
                 f=dataSnapshot.child(FirebaseAuth.getInstance().getUid()).getValue(Farmer.class);
                 sowdate=f.getFarmerdate();
@@ -108,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 String id=FirebaseAuth.getInstance().getCurrentUser().getUid();
                 DatabaseReference databaseReference;
                 databaseReference=FirebaseDatabase.getInstance().getReference().child("Farmers").child(id);
-                Farmer f=new Farmer(id,username,sowdate,mobileno);
+                f=new Farmer(id,username,sowdate,mobileno,"");
                 databaseReference.setValue(f);
                 sowdate=f.getFarmerdate();
                 username=f.getFarmername();

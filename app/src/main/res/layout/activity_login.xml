@@ -19,9 +19,9 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="110dp"
-        android:layout_marginTop="150dp"
-        android:orientation="vertical">
+        android:layout_marginTop="100dp"
+        android:orientation="vertical"
+        android:gravity="center">
         <TextView
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
@@ -33,12 +33,14 @@
             >
         </TextView>
         <EditText
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Enter your mobile number"
             android:layout_marginTop="20dp"
             android:textSize="24sp"
-            android:id="@+id/mobile"/>
+            android:id="@+id/mobile"
+            android:inputType="number"
+            android:imeOptions="actionDone"/>
        <!-- <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

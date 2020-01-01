@@ -2,16 +2,25 @@ package com.myapp.android.smartirrigation;
 
 public class Farmer
 {
-    private String Farmerid,Farmername,Farmerdate,mobileno;
+    private String Farmerid,Farmername,Farmerdate,mobileno,token;
 
     public Farmer() {
     }
 
-    public Farmer(String farmerid, String farmername, String farmerdate,String mobileno) {
+    public Farmer(String farmerid, String farmername, String farmerdate,String mobileno,String token) {
         Farmerid = farmerid;
         Farmername = farmername;
         Farmerdate = farmerdate;
         this.mobileno=mobileno;
+        this.token=token;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getMobileno() {

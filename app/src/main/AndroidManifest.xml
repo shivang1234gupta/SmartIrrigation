@@ -10,13 +10,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".PondActivity"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity"
+            android:label="Pond info"></activity>
         <activity android:name=".FieldActivity"
-            android:parentActivityName=".MainActivity"/>
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".VerifyPhoneActivity" />
-        <activity android:name=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:label="Field info"/>
+        <activity android:name=".LoginActivity"
+            android:label="Login"/>
+        <activity android:name=".ProfileActivity"
+            android:label="Set up your profile"/>
+        <activity android:name=".VerifyPhoneActivity"
+            android:label="Verify details"/>
+        <activity android:name=".MainActivity"
+            android:label="Dashboard"/>
         <activity android:name=".PageViewActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

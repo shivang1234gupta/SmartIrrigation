@@ -78,7 +78,7 @@ public class ProfileActivity extends AppCompatActivity implements DatePickerDial
             String id=FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
-            Farmer farmer=new Farmer(id,name,sowdate,mobileno);
+            Farmer farmer=new Farmer(id,name,sowdate,mobileno,"");
             databaseReference.child(id).setValue(farmer);
 
     }
