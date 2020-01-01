@@ -63,14 +63,15 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     @Override
     protected void onStart() {
         super.onStart();
+        databaseReference= FirebaseDatabase.getInstance().getReference("Farmers");
+        //databaseReference=databaseReference.child(FirebaseAuth.getInstance().getUid());
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 Farmer f=new Farmer();
-                for (DataSnapshot ds:dataSnapshot.getChildren()){
-                    f=ds.getValue(Farmer.class);
-                }
+
+                f=dataSnapshot.child(FirebaseAuth.getInstance().getUid()).getValue(Farmer.class);
                 sowdate=f.getFarmerdate();
                 username=f.getFarmername();
                 mobileno=f.getMobileno();
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 String id=FirebaseAuth.getInstance().getCurrentUser().getUid();
                 DatabaseReference databaseReference;
                 databaseReference=FirebaseDatabase.getInstance().getReference().child("Farmers").child(id);
-                Farmer f=new Farmer("",username,sowdate,mobileno);
+                Farmer f=new Farmer(id,username,sowdate,mobileno);
                 databaseReference.setValue(f);
                 sowdate=f.getFarmerdate();
                 username=f.getFarmername();
