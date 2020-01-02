@@ -73,57 +73,42 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
 
         /*Using FCM for activating notification*/
-        /*if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O)
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O)
         {
             NotificationChannel channel=new NotificationChannel(CHANNEL_ID,CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
             channel.setDescription(CHANNEL_DESC);
             NotificationManager manager=getSystemService(NotificationManager.class);
             manager.createNotificationChannel(channel);
         }
-
-
-        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-            @Override
-            public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                String token;
-             if (task.isSuccessful())
-             {
-                 token=task.getResult().getToken();
-                 databaseReference=FirebaseDatabase.getInstance().getReference("Farmers").child(FirebaseAuth.getInstance().getUid());
-                 f=new Farmer(FirebaseAuth.getInstance().getUid(),username,sowdate,mobileno,token);
-                 databaseReference.setValue(f);
-                 Log.d("success","FCM successful");
-             }
-             else {
-                 token = task.getException().getMessage();
-                 Log.d("failed","FCM Failed");
-             }
-            }
-        });*/
-
-
-
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         databaseReference= FirebaseDatabase.getInstance().getReference("Farmers");
-        //databaseReference=databaseReference.child(FirebaseAuth.getInstance().getUid());
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 //Farmer f=new Farmer();
-
                 f=dataSnapshot.child(FirebaseAuth.getInstance().getUid()).getValue(Farmer.class);
                 sowdate=f.getFarmerdate();
                 username=f.getFarmername();
                 mobileno=f.getMobileno();
+                /*FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (task.isSuccessful())
+                        {
+                            String token=task.getResult().getToken();
+                            f.setToken(token);
+                        }
+                    }
+                });*/
                 person.setText(username);
                 String s=sowdate+"  "+currdate;
                 days.setText(s);
+
             }
 
             @Override
@@ -154,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 String id=FirebaseAuth.getInstance().getCurrentUser().getUid();
                 DatabaseReference databaseReference;
                 databaseReference=FirebaseDatabase.getInstance().getReference().child("Farmers").child(id);
-                f=new Farmer(id,username,sowdate,mobileno,"");
+                f.setFarmerdate(sowdate);
                 databaseReference.setValue(f);
                 sowdate=f.getFarmerdate();
                 username=f.getFarmername();
@@ -167,11 +152,12 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 String id1=FirebaseAuth.getInstance().getCurrentUser().getUid();
                 DatabaseReference databaseReference1;
                 databaseReference1=FirebaseDatabase.getInstance().getReference().child("Farmers").child(id1);
-                databaseReference1.removeValue();
+                FirebaseAuth.getInstance().signOut();
                 Toast.makeText(this,"account removed",Toast.LENGTH_LONG).show();
                 Intent intent2=new Intent(MainActivity.this,LoginActivity.class);
                 intent2.putExtra("main","123");
                 startActivity(intent2);
+                databaseReference1.removeValue();
                 return true;
 
             case R.id.logout:

@@ -19,6 +19,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +28,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -72,14 +76,26 @@ public class ProfileActivity extends AppCompatActivity implements DatePickerDial
             }
         });
     }
-    protected void addData(String name)
+    protected void addData(final String name)
     {
+        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+            @Override
+            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                String token;
+                String id=FirebaseAuth.getInstance().getCurrentUser().getUid();
+                if (task.isSuccessful())
+                {
+                    token=task.getResult().getToken();
+                    Farmer farmer=new Farmer(id,name,sowdate,mobileno,token);
+                    databaseReference.child(id).setValue(farmer);
+                }
+                else
+                    Log.d("Error","Invalid");
+            }
+        });
 
-            String id=FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
-            Farmer farmer=new Farmer(id,name,sowdate,mobileno,"");
-            databaseReference.child(id).setValue(farmer);
 
     }
 
